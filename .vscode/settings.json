@@ -1,0 +1,9 @@
+{
+    "python.linting.enabled": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.pep8Enabled": false,
+    "python.linting.flake8Enabled": false,
+    "python.pythonPath": "/Users/thomaslee/anaconda3/envs/bbb_env/bin/python",
+    "python.linting.banditEnabled": false,
+    "python.linting.mypyEnabled": true
+}
