@@ -8,71 +8,71 @@ import numpy as np
 from itertools import compress
 import matplotlib.pyplot as plt
 
-def json_to_csv(directory, fileNames, createSample=False):
-    """
-    json_to_csv: loops through specified JSON files and converts them to csv files.
-                 option to also create a sample csv, which uses np.random.seed 9001 to create a sample dataset with 10% of the observations
+# def json_to_csv(directory, fileNames, createSample=False):
+#     """
+#     json_to_csv: loops through specified JSON files and converts them to csv files.
+#                  option to also create a sample csv, which uses np.random.seed 9001 to create a sample dataset with 10% of the observations
+#
+#                  pandas has a read_json function, but returns a 'Trailing data error' when working with these specific files
+#
+#
+#     Inputs: -directory of JSON files
+#             -list of JSON filenames
+#             -createSample flag
+#
+#     """
+#
+#     start = time.time()
+#
+#     jsonData = []
+#
+#     for fileName in fileNames:
+#         with open(directory + fileName,  encoding="utf8") as file:
+#             print('{0} opened'.format(fileName))
+#             for line in file:
+#                 #I use an rstrip here because some of the files have trailing blank spaces
+#                 jsonData.append(json.loads(line.rstrip()))
+#
+#         df = pd.DataFrame.from_dict(jsonData)
+#
+#         csvFileName = fileName[:len(fileName)-5] + '.csv'
+#
+#         df.to_csv(directory + csvFileName)
+#         print('{0} created'.format(csvFileName))
+#
+#
+#         if createSample:
+#             np.random.seed(9001)
+#             msk = np.random.rand(len(df)) <= 0.1
+#             sample = df[msk]
+#
+#             csvSampleFileName = fileName[:len(fileName)-5] + '_sample.csv'
+#
+#             sample.to_csv(directory + csvSampleFileName)
+#             print('{0} created'.format(csvSampleFileName))
+#
+#     print('This function took {} minutes to run'.format((time.time()-start)/60))
+#
+#
+# # fileNameList = ['user.json',
+# #                 'business.json',
+# #                 'review.json']
+#
+# # json_to_csv('data/', fileNameList, createSample=True)
+#
+# df_business = pd.read_json('data/business.json', lines=True)
+# df_business.dropna(inplace=True, subset = ['categories'], axis=0)
+# df_business.loc[df_business['categories'].str.contains('Restaurants')]
+# df_business['categories'].value_counts()
+#
+# df_business.head()
+#
+# df_business.count()
 
-                 pandas has a read_json function, but returns a 'Trailing data error' when working with these specific files
-
-
-    Inputs: -directory of JSON files
-            -list of JSON filenames
-            -createSample flag
-
-    """
-
-    start = time.time()
-
-    jsonData = []
-
-    for fileName in fileNames:
-        with open(directory + fileName,  encoding="utf8") as file:
-            print('{0} opened'.format(fileName))
-            for line in file:
-                #I use an rstrip here because some of the files have trailing blank spaces
-                jsonData.append(json.loads(line.rstrip()))
-
-        df = pd.DataFrame.from_dict(jsonData)
-
-        csvFileName = fileName[:len(fileName)-5] + '.csv'
-
-        df.to_csv(directory + csvFileName)
-        print('{0} created'.format(csvFileName))
-
-
-        if createSample:
-            np.random.seed(9001)
-            msk = np.random.rand(len(df)) <= 0.1
-            sample = df[msk]
-
-            csvSampleFileName = fileName[:len(fileName)-5] + '_sample.csv'
-
-            sample.to_csv(directory + csvSampleFileName)
-            print('{0} created'.format(csvSampleFileName))
-
-    print('This function took {} minutes to run'.format((time.time()-start)/60))
-
-
-fileNameList = ['user.json',
-                'business.json',
-                'review.json']
-
-json_to_csv('data/', fileNameList, createSample=True)
-
-df_business = pd.read_json('data/business.json', lines=True)
-df_business.dropna(inplace=True, subset = ['categories'], axis=0)
-df_business.loc[df_business['categories'].str.contains('Restaurants')]
-df_business['categories'].value_counts()
-
-df_business.head()
-
-df_business.count()
-
-# reading filter_review
+# # reading filter_review
 df_review = pd.read_csv('data/filtered_reviews.csv', index_col=0)
 df_review.dropna
-
+#
 # inumerating business_in and user_id with bid and uid
 def build_fmap_invmap(ser):
     uni_ele = ser.unique()
@@ -161,41 +161,41 @@ bus_vec_df = pd.DataFrame(data = bus_values, index =
 bus_vec_df
 
 # Joining df_business + bus_vec_df
-df_allBusiness = df_business.join(bus_vec_df, on='business_id', how='right')
-
-df_allBusiness = df_allBusiness.dropna()
+# df_allBusiness = df_business.join(bus_vec_df, on='business_id', how='right')
+#
+# df_allBusiness = df_allBusiness.dropna()
 
 # Pulling user ID 4 and comparing to inverse map on uid (not sure why, maybe to check accuracy?)
-uid = 4
-u_invmap[uid]
-
-
-bname = 'cHdJXLlKNWixBXpDwEGb_A'
-bid = bus_fmap[bname]
-
-df_allBusiness
-
-df_allBusiness.count()
-
-df_allBusiness.loc[df_allBusiness['categories'].str.contains('Restaurant') &
-           df_allBusiness['categories'].str.contains('Japanese')]
-
-# Testing | Passing Train
-
-bid
-
-chipotle = bus_values[bid]
-
-chipotle
-
-japaneselover = user_values[uid]
-
-bus_values
-
-np.square(bus_values - japaneselover[None,:]).sum(1).argsort()
-
-np.square(bus_values - chipotle[None,:]).sum(1).argsort()
-
+# uid = 4
+# u_invmap[uid]
+#
+#
+# bname = 'cHdJXLlKNWixBXpDwEGb_A'
+# bid = bus_fmap[bname]
+#
+# df_allBusiness
+#
+# df_allBusiness.count()
+#
+# df_allBusiness.loc[df_allBusiness['categories'].str.contains('Restaurant') &
+#            df_allBusiness['categories'].str.contains('Japanese')]
+#
+# # Testing | Passing Train
+#
+# bid
+#
+# chipotle = bus_values[bid]
+#
+# chipotle
+#
+# japaneselover = user_values[uid]
+#
+# bus_values
+#
+# np.square(bus_values - japaneselover[None,:]).sum(1).argsort()
+#
+# np.square(bus_values - chipotle[None,:]).sum(1).argsort()
+#
 def closest_businesses_to(business = None, user = None, df = None):
     if business is not None:
         target = bus_values[bus_fmap[business]]
@@ -205,15 +205,25 @@ def closest_businesses_to(business = None, user = None, df = None):
         df = bus_values
     best_restaurants = np.square(df - target[None,:]).sum(1).argsort()
     return best_restaurants
+#
+# midtown_japanese_restaurants = bus_values[:30,:]
+#
+# closest_businesses_to(business = 'cHdJXLlKNWixBXpDwEGb_A')
+#
+#
+# closest_businesses_to(user = 'ri7itn7-CdpsaPxTToK5cQ')
+#
+# closest_businesses_to(user = 'ri7itn7-CdpsaPxTToK5cQ', df = midtown_japanese_restaurants)
 
-midtown_japanese_restaurants = bus_values[:30,:]
-
-closest_businesses_to(business = 'cHdJXLlKNWixBXpDwEGb_A')
+### Saving train
 
 
-closest_businesses_to(user = 'ri7itn7-CdpsaPxTToK5cQ')
 
-closest_businesses_to(user = 'ri7itn7-CdpsaPxTToK5cQ', df = midtown_japanese_restaurants)
+
+
+
+
+
 
 # Dropping NaN
 
