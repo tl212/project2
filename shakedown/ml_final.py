@@ -7,8 +7,9 @@ import pandas as pd
 import numpy as np
 from itertools import compress
 import matplotlib.pyplot as plt
+import pdb
 
-df_review = pd.read_csv('data/filtered_reviews.csv', index_col=0)
+df_review = pd.read_csv('data/filtered_reviews.csv', index_col=0, nrows=100000)
 df_review.dropna
 
 # inumerating business_in and user_id with bid and uid
@@ -21,7 +22,7 @@ def build_fmap_invmap(ser):
 # setting debuging enviroment on (dbg =1) to turn it off (dbg = 0)
 dbg = 1
 if dbg:
-    df_review = df_review.head(100000)
+    df_review = df_review.head(20000)
 
 bus_fmap, bus_invmap = build_fmap_invmap(df_review['business_id'])
 u_fmap, u_invmap = build_fmap_invmap(df_review['user_id'])
@@ -79,21 +80,21 @@ rows = np.random.choice(df_review.shape[0], 64)
 sess.run(tf.global_variables_initializer())
 
 # Creating a loop to train under 64 random rows
-for i in range(10000):
+for i in range(200):
     rows = np.random.choice(df_review.shape[0], 64)
     dfrows = df_review.iloc[rows]
     fd = {users:dfrows['uid'].values,
          businesses:dfrows['bid'].values,
          ratings:dfrows['stars'].values}
     _, l2loss = sess.run([opt, loss], fd)
-    if i % 1000 == 0:
+    if i % 100 == 0:
         print(l2loss)
 
 user_values, bus_values = sess.run([user_vector, bus_vector])
 
 bus_vec_df = pd.DataFrame(data = bus_values, index =
                           [bus_invmap[i] for i in range(n_bus)])
-bus_vec_df
+# bus_vec_df
 
 def closest_businesses_to(business = None, user = None, df = None):
     if business is not None:
@@ -181,14 +182,14 @@ restaurants_df.head()
 #task 1
 def get_restaurants(keyword):
     return restaurants_df.loc[restaurants_df['categories'].str.contains(keyword)]
-
-get_restaurants('Japanese')
+#
+# get_restaurants('Japanese')
 
 #task 2
 def get_reviews_for(rest_id):
     return df_reviewSample.loc[df_reviewSample['business_id']==rest_id]
 
-get_reviews_for('19fdSca3MUoaGFNX2BrjTQ')
+# get_reviews_for('19fdSca3MUoaGFNX2BrjTQ')
 
 
 import pdb
@@ -202,20 +203,20 @@ def get_recommendations_for(user_id = None, business_id = None):
     bnames = [bus_invmap[b] for b in bids]
     return restaurants_df.set_index('business_id').loc[
         [b for b in bnames if b in restaurants_df['business_id'].values]]#.dropna()
-
-get_recommendations_for(business_id = 'a7mTbEi2N8Zd-r-8jlReww')
-
-get_recommendations_for(user_id= '96s7b2PBjmkzEeQTzmKp7w')
+#
+# get_recommendations_for(business_id = 'a7mTbEi2N8Zd-r-8jlReww')
+#
+# get_recommendations_for(user_id= '96s7b2PBjmkzEeQTzmKp7w')
 
 ### Building Geo Table
-
-restaurantsGeo_df = restaurants_df.drop(['is_open', 'review_count'], 1)
-
-lat = 44
-lon = -70
-distance = np.sqrt((restaurantsGeo_df['latitude'] - lat)**2 + (restaurantsGeo_df['longitude'] - lon)**2)
-
-restaurantsGeo_df.loc[distance < 5]
+#
+# restaurantsGeo_df = restaurants_df.drop(['is_open', 'review_count'], 1)
+#
+# lat = 44
+# lon = -70
+# distance = np.sqrt((restaurantsGeo_df['latitude'] - lat)**2 + (restaurantsGeo_df['longitude'] - lon)**2)
+#
+# restaurantsGeo_df.loc[distance < 5]
 
 #task 4
 def filter_by_location(df, lat, lon, max_distance):
@@ -263,10 +264,10 @@ def get_recommendations_for_locally_by_keyword(
     if keyword_include is not None or keyword_exclude is not None:
         df = filter_by_keyword(df, keyword_include, keyword_exclude)
     return df
-
-get_recommendations_for_locally_by_keyword(
-    user_id= '96s7b2PBjmkzEeQTzmKp7w', lat = 44, lon = -70, max_distance = 10,
-keyword_include = 'Korean',keyword_exclude = 'Sushi')
+#
+# get_recommendations_for_locally_by_keyword(
+#     user_id= '96s7b2PBjmkzEeQTzmKp7w', lat = 44, lon = -70, max_distance = 10,
+# keyword_include = 'Korean',keyword_exclude = 'Sushi')
 
 
 
@@ -281,7 +282,7 @@ def get_recommendations_for_locally(user_id = None, business_id = None, lat = 0,
         [b for b in bnames if b in restaurants_df['business_id'].values]]#.dropna()
     filtered_by_location = filter_by_location(closest_businesses, lat, lon, max_distance)
     return filtered_by_location
-
-get_recommendations_for_locally(business_id = 'a7mTbEi2N8Zd-r-8jlReww', lat = 44, lon = -70, max_distance = 10)
-
-get_recommendations_for_locally(user_id= '96s7b2PBjmkzEeQTzmKp7w')
+#
+# get_recommendations_for_locally(business_id = 'a7mTbEi2N8Zd-r-8jlReww', lat = 44, lon = -70, max_distance = 10)
+#
+# get_recommendations_for_locally(user_id= '96s7b2PBjmkzEeQTzmKp7w')
