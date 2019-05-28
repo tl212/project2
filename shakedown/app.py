@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from data import Articles
 #import codebase
 from flask_jsonpify import jsonpify
@@ -8,7 +8,7 @@ import pandas as pd
 
 app = Flask(__name__)
 
-Articles = Articles()
+# Articles = Articles()
 
 @app.route('/')
 def index():
@@ -20,7 +20,7 @@ def about():
 
 @app.route('/articles')
 def articles():
-    return render_template("articles.html", articles = Articles)
+    return render_template("articles.html")
 
 #http://127.0.0.1:5000/recommendations/a7mTbEi2N8Zd-r-8jlReww
 #http://127.0.0.1:5000/recommendations/user/hG7b0MtEbXx5QzbzE6C_VA
@@ -35,6 +35,37 @@ def recommendations(user_id = None):
     #return render_template('recommendations.html',  tables=[df.to_html(classes='data')], titles=df.columns.values)
     #return render_template('recommendations.html', data_frame=df.to_html())
     return render_template('recommendations.html',  tables=[df.to_html(classes='data')], titles=df.columns.values)
+
+@app.route("/send", methods=["GET", "POST"])
+def send():
+    print("not working from here")
+    if request.method == "POST":
+        print("got post request")
+        name = request.form["user_id"]
+        # business = request.form["business_id"]
+        print(name)
+        business_id = None
+        df = get_recommendations_for(business_id = None, user_id = name)
+        print(df)
+        #return render_template('recommendations.html',  tables=[df.to_html(classes='data')], titles=df.columns.values)
+        #return render_template('recommendations.html', data_frame=df.to_html())
+        return render_template('index.html',  tables=[df.to_html(classes='data')], titles=df.columns.values)
+
+    # return render_template('index.html')
+
+# @app.route('/recommendations/business/<business_id>')
+# def recommendations(business_id = None):
+#     #print(business_id)
+#     print(business_id)
+#     user_id = None
+#     df = get_recommendations_for(business_id = business_id, user_id = user_id)
+#     print(df)
+#     #return render_template('recommendations.html',  tables=[df.to_html(classes='data')], titles=df.columns.values)
+#     #return render_template('recommendations.html', data_frame=df.to_html())
+#     return render_template('recommendations.html',  tables=[df.to_html(classes='data')], titles=df.columns.values)
+#
+#
+#
 
 
 # @app.route('/recommendations')
