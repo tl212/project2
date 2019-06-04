@@ -1,5 +1,5 @@
 ## Project 2 | Recommender System for Yelp 
 
-## Copyright
+### Copyright
 
 © 2019 realGenius, Inc.
